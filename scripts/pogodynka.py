@@ -12,10 +12,10 @@ def add_to_html(temperature, pressure, humidity):
         filedata = file.read()
 
     # Replace the target string
-    filedata = filedata.replace('{{temp}}', temperature)
-    filedata = filedata.replace('{{cisnienie}}', pressure)
-    filedata = filedata.replace('{{wilgotnosc}}', humidity)
-    filedata = filedata.replace('{{data}}', now.strftime("%d/%m/%Y %H:%M:%S"))
+    filedata = filedata.replace('{{temp}}', str(temperature))
+    filedata = filedata.replace('{{cisnienie}}', str(pressure))
+    filedata = filedata.replace('{{wilgotnosc}}', str(humidity))
+    filedata = filedata.replace('{{data}}', str(datetime.now()))
 
     # Write the file out again
     with open(index_file, 'w') as file:
