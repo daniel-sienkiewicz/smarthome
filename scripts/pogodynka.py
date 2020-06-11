@@ -1,5 +1,7 @@
 from datetime import datetime
 import bme280
+import RPi.GPIO as GPIO
+import time
 
 index_file = 'webpage/index.html'
 
@@ -21,6 +23,17 @@ def add_to_html(temperature, pressure, humidity):
     with open(index_file, 'w') as file:
         file.write(filedata)
 
+def setup():
+    GPIO.setwarnings(False)
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setup(21, GPIO.OUT)
+    GPIO.output(21, GPIO.HIGH)
+
+def recovery():
+    GPIO.output(21, GPIO.LOW)
+    time.sleep(30)
+    GPIO.output(21, GPIO.HIGH)
+
 def main():
     temperature, pressure, humidity = bme280.readBME280All()
     print("Temperatura: {0} C".format(round(temperature, 2)))
@@ -30,4 +43,11 @@ def main():
     add_to_html(temperature, pressure, humidity)
 
 if __name__ == "__main__":
-    main()
+    setup()
+    try:
+        main()
+        GPIO.cleanup()
+    except:
+        recovery()
+        main()
+        GPIO.cleanup()
